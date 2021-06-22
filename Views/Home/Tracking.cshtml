@@ -1,0 +1,166 @@
+﻿
+@{
+    ViewBag.Title = "Tracking";
+}
+<div class="container">
+    <div class="breadcumb-content" style="">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Stats</li>
+            </ol>
+        </nav>
+    </div>
+    <h1 class="mb-5 text-center">Stats</h1>
+    <div class="compare-box compare-box-right mb-5">
+        <div class="compare-heading text-center mb-30">
+            <h2 class="fadeInUp"><span class="gradient-text blue normal">Coronavirus disease (COVID-19) outbreak situation</span></h2>
+        </div>
+
+        <section class="text-gray-700 body-font container text-center" style="color:black">
+            <div class="container row py-24 mx-auto">
+                <div class="col-md-4 col-sm-12 col-lg-4">
+                    <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900 card-title-total-cases count"><small>(Loading...)</small></h2>
+                    <p class="leading-relaxed">Total Cases</p>
+                </div>
+                <div class="col-md-4 col-sm-12 col-lg-4">
+                    <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900 card-title-total-deaths count"><small>(Loading...)</small></h2>
+                    <p class="leading-relaxed">Deaths</p>
+                </div>
+                <div class="col-md-4 col-sm-12 col-lg-4">
+                    <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900 card-title-total-countries count"><small>(Loading...)</small></h2>
+                    <p class="leading-relaxed">Recoverd</p>
+                </div>
+                </div>
+        </section>
+
+
+
+
+
+       
+        <div class="text-center" style="color:black"><b>Last update: @DateTime.Now.ToString("mmm/yyyy/d-dddd")</b></div>
+    </div>
+
+    <div class="col-md col-md-offset text-center mt-5">
+        <h1>Real Time World Wide <span class="linear-heading" style="background-image: linear-gradient(35deg, #fe86a7 0%, #6078EA 100%);-webkit-background-clip: text;-webkit-text-fill-color: transparent;">COVID-19</span> Situation</h1>
+        <p class="mt-3">Click The Country Row For More Details:</p>
+    </div>
+
+    <div class="mt-5">
+        <table id="Countries" class="table table-hover table-bordered dt-responsive nowrap table-striped" width="100%" cellpadding="0">
+            <thead>
+                <tr>
+                    <th>
+                        Country
+                    </th>
+                    <th>
+                        Total Confirmed
+                    </th>
+                    <th>
+                        Total Recovered
+                    </th>
+                    <th>
+                        Total Deaths
+                    </th>
+                    <th>
+                        New Deaths
+                    </th>
+                    <th>
+                        New Confirmed
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@*jumbotron section*@
+
+<div class="jumbotron jumbotron-fluid jumbo-section-end mt-5" id="module">
+    <div class="container my-5">
+        <h1 class="text-light">Stay Home <span class="linear-heading">Stay Safe </span></h1>
+        <p class="lead text-light">The information may be changed or updated to ensure that it's the latest and up-to-date to meet the website viewers needs and requirements.</p>
+        <button class="btn btn-primary jumbo-section-end-btn">
+            <a href="@Url.Action("Index", "Posts")" target="_blank">Click here to find latest news</a>
+        </button>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            var table = $("#Countries").DataTable({
+                responsive: true,
+                ajax: {
+                    url: "https://api.covid19api.com/summary",
+                    type: "Get",
+                    dataSrc: "Countries"
+                },
+                columns: [
+                    {
+                        data: "Country",
+                    },
+                    {
+                        data: "TotalConfirmed",
+                    },
+                    {
+                        data: "TotalRecovered"
+                    },
+                    {
+                        data: "TotalDeaths"
+                    },
+                    {
+                        data: "NewDeaths"
+                    },
+                    {
+                        data: "NewConfirmed"
+                    },
+                    {
+                        data: "Date"
+                    }
+
+                ]
+            });
+            new $.fn.dataTable.FixedHeader(table);
+        });
+
+        const totalCases = document.querySelector('.card-title-total-cases');
+        const totalDeaths = document.querySelector('.card-title-total-deaths');
+        const totalRecovered = document.querySelector('.card-title-total-countries');
+
+        $.ajax({
+            responsive: true,
+            url: "https://api.covid19api.com/summary",
+            type: 'GET',
+            data: 'Global',
+            success: function(res) {
+                totalCases.textContent = (res.Global.TotalConfirmed.toString());
+                totalRecovered.textContent = (res.Global.TotalRecovered.toString());
+                totalDeaths.textContent = (res.Global.TotalDeaths.toString());
+                $('.count').each(function () {
+                    $(this).prop('Counter',0).animate({
+                        Counter: $(this).text()
+                    }, {
+                        duration: 3500,
+                        easing: 'swing',
+                        step: function (now) {
+                            $(this).text(Math.ceil(now));
+                        }
+                    });
+                });
+            }
+        });
+
+        
+
+    </script>
+}

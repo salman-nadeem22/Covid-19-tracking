@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Covid_19_Tracking.Models.Post>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="jumbotron jumbotron-fluid align-text-bottom main-jumbo-news">
+    <div class="col-10 text-left jumbo-heading">
+        <h1 class="display-4 text-light mt-5">See the latest news about <span style="background-image: linear-gradient(35deg, #fe86a7 0%, #6078EA 100%);-webkit-background-clip: text;-webkit-text-fill-color: transparent;">COVID-19</span></h1>
+        <p class="lead text-light">The information may be changed or updated to ensure that it's the latest and up-to-date to meet the website viewers needs and requirements.</p>
+    </div>
+</div>
+
+
+<div class="container">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <p class="text-center">
+            @Html.ActionLink("Create New", "Create", "Posts", new { @class = "btn btn-primary mt-2 ml-2 btn-neu-blog" })
+        </p>
+    }
+
+    <div class="row d-flex justify-content-center mt-5">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-8 col-sm-12 col-xs-12 mt-4">
+                <div class="blog-heading">
+                    <h1>@item.Heading</h1>
+                </div>
+                <div class="blog-content">
+                    <p>@item.Content</p>
+                </div>
+                <a href="@item.Link" class="btn btn-primary mt-5 ml-1 btn-neu-blog" target="_blank">Learn More</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @Html.ActionLink("Update", "Edit", "Posts", new { id = item.Id }, new { @class = "btn btn-primary mt-5 ml-2 btn-neu-blog" })
+                    @Html.ActionLink("Delete", "Delete", "Posts", new { id = item.Id }, new { @class = "btn btn-primary mt-5 ml-2 btn-neu-blog" })
+                }
+                <p class="text-right">@item.DateTime.ToString("dd/MMMM/yyyy")</p>
+                <hr />
+            </div>
+        }
+    </div>
+</div>
+
+
+
+
